@@ -23,7 +23,7 @@ def trades_list_view(
     limit: int = 100,
     sort_direction: str = "asc",
     sort_key: str = "trade_id",
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     A view for listing trades, supports pagination, sorting, search and filtering
@@ -34,19 +34,29 @@ def trades_list_view(
         return service.search_filters(search)
 
     if asset_class:
-        return service.filter_list(trade_filters.filter_by_asset_class, dict(asset_class=asset_class))
+        return service.filter_list(
+            trade_filters.filter_by_asset_class, dict(asset_class=asset_class)
+        )
     if start or end:
-        return service.filter_list(trade_filters.filter_by_trade_date, dict(start=start, end=end))
+        return service.filter_list(
+            trade_filters.filter_by_trade_date, dict(start=start, end=end)
+        )
     if max_price or min_price:
-        return service.filter_list(trade_filters.filter_by_price, dict(max_price=max_price, enmin_priced=min_price))
+        return service.filter_list(
+            trade_filters.filter_by_price,
+            dict(max_price=max_price, enmin_priced=min_price),
+        )
     if trade_type:
-        return service.filter_list(trade_filters.filter_by_price, dict(max_price=max_price, enmin_priced=min_price))
+        return service.filter_list(
+            trade_filters.filter_by_price,
+            dict(max_price=max_price, enmin_priced=min_price),
+        )
 
     return service.get_list(
         pagination_offset=offset,
         pagination_limit=limit,
         sort_key=sort_key,
-        sort_direction=sort_direction
+        sort_direction=sort_direction,
     )
 
 

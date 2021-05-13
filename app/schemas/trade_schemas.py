@@ -54,9 +54,7 @@ class Instrument(BaseModel):
         alias="id",
         description="The ISIN/ID of the instrument traded. E.g. TSLA, AAPL, AMZN...etc",
     )
-    name: str = Field(
-        alias="name", description="The name of the instrument traded."
-    )
+    name: str = Field(alias="name", description="The name of the instrument traded.")
 
     class Config:
         orm_mode = True
@@ -100,4 +98,3 @@ class Trade(BaseModel):
 
     class Config:
         orm_mode = True
-

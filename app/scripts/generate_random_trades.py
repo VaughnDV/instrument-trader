@@ -42,14 +42,8 @@ def generate(db: Session, number_of_trades: int = 10) -> None:
             price=float(random.randint(100, 1000000)) / 100,
             quantity=random.randint(1, 100),
         )
-        db_trader = random.choice(
-            db.query(trade_models.Trader)
-            .all()
-        )
-        db_instrument = random.choice(
-            db.query(trade_models.Instrument)
-            .all()
-        )
+        db_trader = random.choice(db.query(trade_models.Trader).all())
+        db_instrument = random.choice(db.query(trade_models.Instrument).all())
         db.add(db_trade_detail)
         db.commit()
         db.refresh(db_trade_detail)

@@ -5,14 +5,14 @@ from app.database import Base
 
 
 class Trader(Base):
-    __tablename__ = 'trader'
+    __tablename__ = "trader"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     trade = relationship("Trade", back_populates="trader")
 
 
 class Instrument(Base):
-    __tablename__ = 'instrument'
+    __tablename__ = "instrument"
     id = Column(String, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     trade = relationship("Trade", back_populates="instrument")
@@ -30,7 +30,7 @@ class AssetClassEnum(enum.Enum):
 
 
 class TradeDetail(Base):
-    __tablename__ = 'trade_detail'
+    __tablename__ = "trade_detail"
 
     id = Column(Integer, primary_key=True, index=True)
     buy_sell_indicator = Column(Enum(TradeBuySellEnum), nullable=False)
@@ -40,7 +40,7 @@ class TradeDetail(Base):
 
 
 class Trade(Base):
-    __tablename__ = 'trade'
+    __tablename__ = "trade"
 
     trade_id = Column(Integer, primary_key=True, index=True)
     asset_class = Column(Enum(AssetClassEnum), nullable=False)
@@ -48,7 +48,7 @@ class Trade(Base):
     trade_date_time = Column(DateTime, default=func.now())
 
     # One to One with TradeDetail
-    trade_detail_id = Column(Integer, ForeignKey('trade_detail.id'))
+    trade_detail_id = Column(Integer, ForeignKey("trade_detail.id"))
     trade_detail = relationship("TradeDetail", back_populates="trade")
 
     # Many to One with Instrument

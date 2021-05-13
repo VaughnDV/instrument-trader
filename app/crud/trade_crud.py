@@ -3,7 +3,11 @@ from sqlalchemy.orm import Session
 from app.models import trade_models
 from typing import List, Tuple, Callable
 from app.types import ModelType
-from app.crud.trade_filters import search_filter_by_counterparty, search_filter_by_trader_name, search_filter_by_instrument
+from app.crud.trade_filters import (
+    search_filter_by_counterparty,
+    search_filter_by_trader_name,
+    search_filter_by_instrument,
+)
 
 
 class TradeCRUDService:
@@ -26,7 +30,7 @@ class TradeCRUDService:
         pagination_limit: int = 100,
         pagination_offset: int = 0,
         sort_key: str = "trade_id",
-        sort_direction: str = "asc"
+        sort_direction: str = "asc",
     ) -> List[ModelType]:
         sort = desc(sort_key) if sort_direction == "desc" else asc(sort_key)
         return (
@@ -39,7 +43,9 @@ class TradeCRUDService:
 
     def get(self, trade_id: int) -> ModelType:
         return (
-            self.db.query(self.model).filter(trade_models.Trade.trade_id == trade_id).first()
+            self.db.query(self.model)
+            .filter(trade_models.Trade.trade_id == trade_id)
+            .first()
         )
 
     def search_filters(self, search_value: str) -> List[ModelType]:
