@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models import trade_models
 from typing import List
-from app.types import ModelType
+from app.project_types import ModelType
 
 
 def search_filter_by_counterparty(db: Session, search_value: str) -> List[ModelType]:
@@ -76,8 +76,8 @@ def filter_by_trade_date(db: Session, values_dict: dict) -> List[ModelType]:
 
 
 def filter_by_price(db: Session, values_dict: dict) -> List[ModelType]:
-    max_price = float(values_dict["max_price"])
-    min_price = float(values_dict["min_price"])
+    max_price = values_dict["max_price"]
+    min_price = values_dict["min_price"]
 
     if max_price and not min_price:
         return (
@@ -104,7 +104,8 @@ def filter_by_price(db: Session, values_dict: dict) -> List[ModelType]:
     )
 
 
-def filter_by_buy_sell_indicator(db: Session, trade_type: str) -> List[ModelType]:
+def filter_by_buy_sell_indicator(db: Session, values_dict: dict) -> List[ModelType]:
+    trade_type = values_dict["trade_type"]
     return (
         db.query(trade_models.Trade)
         .join(trade_models.Trade.trade_detail)

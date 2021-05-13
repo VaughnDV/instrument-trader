@@ -2,7 +2,7 @@ from sqlalchemy import desc, asc
 from sqlalchemy.orm import Session
 from app.models import trade_models
 from typing import List, Tuple, Callable
-from app.types import ModelType
+from app.project_types import ModelType
 from app.crud.trade_filters import (
     search_filter_by_counterparty,
     search_filter_by_trader_name,

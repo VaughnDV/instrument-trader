@@ -44,12 +44,12 @@ def trades_list_view(
     if max_price or min_price:
         return service.filter_list(
             trade_filters.filter_by_price,
-            dict(max_price=max_price, enmin_priced=min_price),
+            dict(max_price=max_price, min_price=min_price),
         )
     if trade_type:
         return service.filter_list(
-            trade_filters.filter_by_price,
-            dict(max_price=max_price, enmin_priced=min_price),
+            trade_filters.filter_by_buy_sell_indicator,
+            dict(trade_type=trade_type.upper()),
         )
 
     return service.get_list(
