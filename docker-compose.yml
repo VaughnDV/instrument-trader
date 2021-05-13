@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  instrument-trader:
+    container_name: "instrument-trader"
+    image: "instrument-trader:latest"
+    env_file:
+      - .env
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      labels:
+        - fastapi-instrument-trader
+    volumes:
+        - .:/code
+    ports:
+      - 5000:5000
