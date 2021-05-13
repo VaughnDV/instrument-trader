@@ -1,6 +1,4 @@
-from sqlalchemy.orm import Session
-
-from .conftest import client, setup_test_trades_data, TestingSessionLocal
+from .conftest import client, setup_test_trades_data
 from datetime import datetime, timedelta
 
 setup_test_trades_data()
@@ -138,7 +136,7 @@ def test_filtering_on_multiple_asset_classes():
     assert data[1]["asset_class"] == "fx"
 
 
-def test_filter_trades_before_end_date(db: Session = TestingSessionLocal()):
+def test_filter_trades_before_end_date():
     date = str((datetime.now() + timedelta(days=1)).date())
 
     response = client.get(
@@ -151,9 +149,7 @@ def test_filter_trades_before_end_date(db: Session = TestingSessionLocal()):
         assert d["trade_date_time"] < date
 
 
-def test_filter_trades_before_end_date_returns_none(
-    db: Session = TestingSessionLocal(),
-):
+def test_filter_trades_before_end_date_returns_none():
     date = str((datetime.now() - timedelta(days=1)).date())
 
     response = client.get(

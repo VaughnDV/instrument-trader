@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 import datetime as dt
 from pydantic import BaseModel, Field
 from app.models.trade_models import AssetClassEnum, TradeBuySellEnum
