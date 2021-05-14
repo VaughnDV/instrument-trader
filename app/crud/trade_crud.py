@@ -45,9 +45,7 @@ class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin)
 
     def get(self, search_id: int) -> ModelType:
         return (
-            self.db.query(self.model)
-            .filter(trade_models.Trade.trade_id == search_id)
-            .first()
+            self.db.query(self.model).filter(self.model.trade_id == search_id).first()
         )
 
     def search(self, search_value: str) -> List[ModelType]:
