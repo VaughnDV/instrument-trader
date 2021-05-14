@@ -55,6 +55,3 @@ class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin)
             if found:
                 results += found
         return results
-
-    def filter(self, filter_fn: Callable, values_dict: dict) -> List[ModelType]:
-        return filter_fn(self.db, values_dict)

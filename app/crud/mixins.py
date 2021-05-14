@@ -1,17 +1,25 @@
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, List
+
+from sqlalchemy.orm import Session
 
 from app.custom_types import ModelType
 
 
 class GetMixin(ABC):
-    @abstractmethod
+    db: Session
+    model: ModelType
+
     def get(self, search_id: int) -> ModelType:
-        ...
+        return (
+            self.db.query(self.model).filter(self.model.trade_id == search_id).first()
+        )
 
 
 class GetListMixin(ABC):
-    @abstractmethod
+    db: Session
+    model: ModelType
+
     def get_list(
             self,
             pagination_limit: int,
@@ -19,16 +27,18 @@ class GetListMixin(ABC):
             sort_key: str = "trade_id",
             sort_direction: str = "asc",
     ) -> ModelType:
-        ...
+        return self.db.query(self.model).all()
 
 
 class SearchFiltersMixin(ABC):
+
     @abstractmethod
-    def search(self, search_value: str) -> ModelType:
+    def search(self, search_value: str) -> List[ModelType]:
         ...
 
 
 class FiltersMixin(ABC):
-    @abstractmethod
-    def filter(self, filter_func: Callable, values_dict: dict) -> ModelType:
-        ...
+    db: Session
+
+    def filter(self, filter_fn: Callable, values_dict: dict) -> List[ModelType]:
+        return filter_fn(self.db, values_dict)
