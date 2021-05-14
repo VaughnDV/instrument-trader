@@ -12,7 +12,7 @@ class GetMixin(ABC):
 
     def get(self, search_id: int) -> ModelType:
         return (
-            self.db.query(self.model).filter(self.model.trade_id == search_id).first()
+            self.db.query(self.model).filter(self.model.id == search_id).first()
         )
 
 
