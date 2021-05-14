@@ -4,7 +4,7 @@ from typing import Callable
 
 class GetMixin(ABC):
     @abstractmethod
-    def get(self, search_id: int):
+    def get(self, search_id: int) -> dict:
         ...
 
 
@@ -16,17 +16,17 @@ class GetListMixin(ABC):
         pagination_offset: int,
         sort_key: str,
         sort_direction: str,
-    ):
+    ) -> dict:
         ...
 
 
 class SearchFiltersMixin(ABC):
     @abstractmethod
-    def search(self, search_value: str):
+    def search(self, search_value: str) -> dict:
         ...
 
 
 class FiltersMixin(ABC):
     @abstractmethod
-    def filter(self, filter_func: Callable, values_dict: dict):
+    def filter(self, filter_func: Callable, values_dict: dict) -> dict:
         ...

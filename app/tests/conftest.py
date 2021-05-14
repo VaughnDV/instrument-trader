@@ -18,7 +18,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 Base.metadata.create_all(bind=engine)
 
 
-def override_get_db():
+def override_get_db() -> Session:
     try:
         db = TestingSessionLocal()
         yield db
@@ -70,7 +70,7 @@ DUMMY_TRADES = [
 ]
 
 
-def setup_test_trades_data(db: Session = TestingSessionLocal()):
+def setup_test_trades_data(db: Session = TestingSessionLocal()) -> None:
     for trader in DUMMY_TRADERS:
         db_trader = trade_models.Trader(**trader)
         db.add(db_trader)

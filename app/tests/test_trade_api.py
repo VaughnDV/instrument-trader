@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 setup_test_trades_data()
 
 
-def test_get_trade_by_id():
+def test_get_trade_by_id() -> None:
     response = client.get(
         "/trades/1",
     )
@@ -22,7 +22,7 @@ def test_get_trade_by_id():
     }
 
 
-def test_list_traders():
+def test_list_traders() -> None:
     response = client.get(
         "/trades/",
     )
@@ -70,7 +70,7 @@ def test_list_traders():
     ]
 
 
-def test_search_trades_by_counterparty():
+def test_search_trades_by_counterparty() -> None:
     response = client.get(
         "/trades/?search=StockTrader",
     )
@@ -81,7 +81,7 @@ def test_search_trades_by_counterparty():
         assert d["counterparty"] == "StockTrader"
 
 
-def test_search_trades_by_instrument_id():
+def test_search_trades_by_instrument_id() -> None:
     response = client.get(
         "/trades/?search=TSLA",
     )
@@ -92,7 +92,7 @@ def test_search_trades_by_instrument_id():
         assert d["instrument"]["id"] == "TSLA"
 
 
-def test_search_trades_by_instrument_name():
+def test_search_trades_by_instrument_name() -> None:
     response = client.get(
         "/trades/?search=Tesla",
     )
@@ -103,7 +103,7 @@ def test_search_trades_by_instrument_name():
         assert d["instrument"]["name"] == "Tesla"
 
 
-def test_search_trades_by_trader():
+def test_search_trades_by_trader() -> None:
     response = client.get(
         "/trades/?search=bob%20smith",
     )
@@ -114,7 +114,7 @@ def test_search_trades_by_trader():
         assert d["trader"]["name"] == "bob smith"
 
 
-def test_filter_trades_by_asset_class():
+def test_filter_trades_by_asset_class() -> None:
     response = client.get(
         "/trades/?asset_class=EQUITY",
     )
@@ -125,7 +125,7 @@ def test_filter_trades_by_asset_class():
         assert d["asset_class"] == "equity"
 
 
-def test_filtering_on_multiple_asset_classes():
+def test_filtering_on_multiple_asset_classes() -> None:
     response = client.get(
         "/trades/?asset_class=EQUITY,FX",
     )
@@ -136,7 +136,7 @@ def test_filtering_on_multiple_asset_classes():
     assert data[1]["asset_class"] == "fx"
 
 
-def test_filter_trades_before_end_date():
+def test_filter_trades_before_end_date() -> None:
     date = str((datetime.now() + timedelta(days=1)).date())
 
     response = client.get(
@@ -149,7 +149,7 @@ def test_filter_trades_before_end_date():
         assert d["trade_date_time"] < date
 
 
-def test_filter_trades_before_end_date_returns_none():
+def test_filter_trades_before_end_date_returns_none() -> None:
     date = str((datetime.now() - timedelta(days=1)).date())
 
     response = client.get(
@@ -160,7 +160,7 @@ def test_filter_trades_before_end_date_returns_none():
     assert not data
 
 
-def trade_filer_trades_by_max_price():
+def trade_filer_trades_by_max_price() -> None:
     response = client.get(
         "/trades/?max_price=90",
     )
@@ -171,7 +171,7 @@ def trade_filer_trades_by_max_price():
         assert d["trade_detail"]["price"] <= 90
 
 
-def trade_filer_trades_by_min_price():
+def trade_filer_trades_by_min_price() -> None:
     response = client.get(
         "/trades/?min_price=80",
     )
@@ -182,7 +182,7 @@ def trade_filer_trades_by_min_price():
         assert d["trade_detail"]["price"] >= 80
 
 
-def trade_filer_trades_between_min_price_and_max_price():
+def trade_filer_trades_between_min_price_and_max_price() -> None:
     response = client.get(
         "/trades/?max_price=90&min_price=80",
     )
@@ -192,7 +192,7 @@ def trade_filer_trades_between_min_price_and_max_price():
         assert 90 <= d["trade_detail"]["price"] >= 80
 
 
-def trade_filter_trades_buy_sell_indicator():
+def trade_filter_trades_buy_sell_indicator() -> None:
     response = client.get(
         "/trades/?trade_type=BUY",
     )
@@ -202,7 +202,7 @@ def trade_filter_trades_buy_sell_indicator():
         assert d["trade_detail"]["buy_sell_indicator"] == "buy"
 
 
-def test_list_trades_pagination():
+def test_list_trades_pagination() -> None:
     response = client.get(
         "/trades/?offset=1&limit=1",
     )
@@ -219,7 +219,7 @@ def test_list_trades_pagination():
     }
 
 
-def test_list_trades_sorting():
+def test_list_trades_sorting() -> None:
     response = client.get(
         "/trades/?sort_direction=desc",
     )

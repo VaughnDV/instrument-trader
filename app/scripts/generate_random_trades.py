@@ -14,7 +14,7 @@ DUMMY_INSTRUMENTS = [
 ]
 
 
-def generate(db: Session, number_of_trades: int = 10) -> None:
+def generate(db: Session, number_of_trades: int = 10) -> bool:
 
     for trader in DUMMY_TRADERS:
         try:

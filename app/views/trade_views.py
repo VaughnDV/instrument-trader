@@ -20,12 +20,12 @@ def trades_list_view(
     max_price: Optional[float] = None,
     min_price: Optional[float] = None,
     trade_type: Optional[str] = None,
-    offset: int = None,
-    limit: int = None,
+    offset: int = 0,
+    limit: int = 100,
     sort_direction: str = "asc",
     sort_key: str = "trade_id",
     db: Session = Depends(get_db),
-):
+) -> List[trade_schemas.Trade]:
     """
     A view for listing trades, supports pagination, sorting, search and filtering
     """
@@ -62,7 +62,7 @@ def trades_list_view(
 
 
 @router.get("/trades/{trade_id}", response_model=trade_schemas.Trade)
-def trade_detail_view(trade_id: int, db: Session = Depends(get_db)):
+def trade_detail_view(trade_id: int, db: Session = Depends(get_db)) -> trade_schemas.Trade:
     """
     A view for retrieving a single trade detail by trade_id
     """
