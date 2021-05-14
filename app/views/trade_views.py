@@ -6,6 +6,7 @@ from app.crud import trade_crud, trade_filters
 from app.schemas import trade_schemas
 from app.database import engine, get_db
 
+
 router = APIRouter()
 trade_models.Base.metadata.create_all(bind=engine)
 
@@ -31,23 +32,23 @@ def trades_list_view(
     service = trade_crud.TradeCRUDService(db)
 
     if search:
-        return service.search_filters(search)
+        return service.search(search)
 
     if asset_class:
-        return service.filter_list(
+        return service.filter(
             trade_filters.filter_by_asset_class, dict(asset_class=asset_class)
         )
     if start or end:
-        return service.filter_list(
+        return service.filter(
             trade_filters.filter_by_trade_date, dict(start=start, end=end)
         )
     if max_price or min_price:
-        return service.filter_list(
+        return service.filter(
             trade_filters.filter_by_price,
             dict(max_price=max_price, min_price=min_price),
         )
     if trade_type:
-        return service.filter_list(
+        return service.filter(
             trade_filters.filter_by_buy_sell_indicator,
             dict(trade_type=trade_type.upper()),
         )

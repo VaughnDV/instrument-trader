@@ -1,8 +1,10 @@
 from sqlalchemy import desc, asc
 from sqlalchemy.orm import Session
+
+from app.crud.mixins import GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin
 from app.models import trade_models
 from typing import List, Tuple, Callable
-from app.project_types import ModelType
+from app.custom_types import ModelType
 from app.crud.trade_filters import (
     search_filter_by_counterparty,
     search_filter_by_trader_name,
@@ -10,7 +12,7 @@ from app.crud.trade_filters import (
 )
 
 
-class TradeCRUDService:
+class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin):
     def __init__(
         self,
         db: Session = None,
@@ -41,14 +43,14 @@ class TradeCRUDService:
             .all()
         )
 
-    def get(self, trade_id: int) -> ModelType:
+    def get(self, search_id: int) -> ModelType:
         return (
             self.db.query(self.model)
-            .filter(trade_models.Trade.trade_id == trade_id)
+            .filter(trade_models.Trade.trade_id == search_id)
             .first()
         )
 
-    def search_filters(self, search_value: str) -> List[ModelType]:
+    def search(self, search_value: str) -> List[ModelType]:
         results = []
         for searchable_filter in self.searchable_filters:
             found = searchable_filter(self.db, search_value)
@@ -56,5 +58,5 @@ class TradeCRUDService:
                 results += found
         return results
 
-    def filter_list(self, filter_func: Callable, values_dict: dict) -> List[ModelType]:
-        return filter_func(self.db, values_dict)
+    def filter(self, filter_fn: Callable, values_dict: dict) -> List[ModelType]:
+        return filter_fn(self.db, values_dict)

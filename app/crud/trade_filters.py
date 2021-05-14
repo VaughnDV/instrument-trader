@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models import trade_models
 from typing import List
-from app.project_types import ModelType
+from app.custom_types import ModelType
 
 
 def search_filter_by_counterparty(db: Session, search_value: str) -> List[ModelType]:
