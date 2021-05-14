@@ -20,13 +20,7 @@ class GetListMixin(ABC):
     db: Session
     model: ModelType
 
-    def get_list(
-            self,
-            pagination_limit: int,
-            pagination_offset: int = 0,
-            sort_key: str = "trade_id",
-            sort_direction: str = "asc",
-    ) -> ModelType:
+    def get_list(self) -> ModelType:
         return self.db.query(self.model).all()
 
 
