@@ -23,10 +23,8 @@ app.include_router(trade_views.router)
 
 
 @app.get("/generate_10_random_trades/")
-def generate_10_random_trades_webhook(db: Session = Depends(get_db)):
+def generate_10_random_trades_webhook(db: Session = Depends(get_db)) -> int:
     success = generate(db, 10)
     if not success:
         raise HTTPException(status_code=404, detail="Something went wrong")
     return 200
-
-

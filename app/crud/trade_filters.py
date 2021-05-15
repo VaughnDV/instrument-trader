@@ -8,14 +8,12 @@ from app.custom_types import ModelType
 
 
 class SearchFilter(ABC):
-
     @abstractmethod
-    def search(self, db: Session, search_value: Any) -> ModelType:
+    def search(self, db: Session, search_value: Any) -> List[ModelType]:
         """Search db in model for value"""
 
 
 class SearchForCounterParty(SearchFilter):
-
     def search(self, db: Session, search_value: Any) -> List[ModelType]:
         result = (
             db.query(trade_models.Trade)
@@ -26,7 +24,6 @@ class SearchForCounterParty(SearchFilter):
 
 
 class SearchForInstrument(SearchFilter):
-
     def search(self, db: Session, search_value: Any) -> List[ModelType]:
         result = (
             db.query(trade_models.Trade)
@@ -45,7 +42,6 @@ class SearchForInstrument(SearchFilter):
 
 
 class SearchForTraderName(SearchFilter):
-
     def search(self, db: Session, search_value: Any) -> List[ModelType]:
         result = (
             db.query(trade_models.Trade)
