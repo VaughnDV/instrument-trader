@@ -1,12 +1,10 @@
-from http.client import HTTPException
+from fastapi import HTTPException
 
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
 
-from app.crud import trade_crud
 from app.database import get_db
-from app.schemas import trade_schemas
 from app.views import trade_views
 from app.scripts.generate_random_trades import generate
 
@@ -25,10 +23,10 @@ app.include_router(trade_views.router)
 
 
 @app.get("/generate_10_random_trades/")
-def generate_10_random_trades(db: Session = Depends(get_db)):
+def generate_10_random_trades_webhook(db: Session = Depends(get_db)):
     success = generate(db, 10)
-    if success is None:
-        raise HTTPException(status_code=404, detail="Trade not found")
+    if not success:
+        raise HTTPException(status_code=404, detail="Something went wrong")
     return 200
 
 

@@ -6,9 +6,10 @@ from app.models import trade_models
 from typing import List, Tuple, Callable
 from app.custom_types import ModelType
 from app.crud.trade_filters import (
-    search_filter_by_counterparty,
-    search_filter_by_trader_name,
-    search_filter_by_instrument,
+    SearchFilter,
+    SearchForInstrument,
+    SearchForTraderName,
+    SearchForCounterParty,
 )
 
 
@@ -17,10 +18,10 @@ class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin)
         self,
         db: Session = None,
         model: ModelType = trade_models.Trade,
-        searchable_filters: Tuple[Callable] = (
-            search_filter_by_counterparty,
-            search_filter_by_trader_name,
-            search_filter_by_instrument,
+        searchable_filters: Tuple[SearchFilter] = (
+            SearchForInstrument,
+            SearchForTraderName,
+            SearchForCounterParty,
         ),
     ):
         self.db = db
@@ -47,11 +48,3 @@ class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin)
         return (
             self.db.query(self.model).filter(self.model.trade_id == search_id).first()
         )
-
-    def search(self, search_value: str) -> List[ModelType]:
-        results = []
-        for searchable_filter in self.searchable_filters:
-            found = searchable_filter(self.db, search_value)
-            if found:
-                results += found
-        return results

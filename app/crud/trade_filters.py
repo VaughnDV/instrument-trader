@@ -1,43 +1,59 @@
+from abc import ABC, abstractmethod
+
 from sqlalchemy.orm import Session
+
 from app.models import trade_models
-from typing import List
+from typing import List, Any
 from app.custom_types import ModelType
 
 
-def search_filter_by_counterparty(db: Session, search_value: str) -> List[ModelType]:
-    result = (
-        db.query(trade_models.Trade)
-        .filter(trade_models.Trade.counterparty == search_value)
-        .all()
-    )
-    return result
+class SearchFilter(ABC):
+
+    @abstractmethod
+    def search(self, db: Session, search_value: Any) -> ModelType:
+        """Search db in model for value"""
 
 
-def search_filter_by_instrument(db: Session, search_value: str) -> List[ModelType]:
-    result = (
-        db.query(trade_models.Trade)
-        .join(trade_models.Trade.instrument)
-        .filter(trade_models.Instrument.name == search_value)
-        .all()
-    )
-    if not result:
+class SearchForCounterParty(SearchFilter):
+
+    def search(self, db: Session, search_value: Any) -> List[ModelType]:
+        result = (
+            db.query(trade_models.Trade)
+            .filter(trade_models.Trade.counterparty == search_value)
+            .all()
+        )
+        return result
+
+
+class SearchForInstrument(SearchFilter):
+
+    def search(self, db: Session, search_value: Any) -> List[ModelType]:
         result = (
             db.query(trade_models.Trade)
             .join(trade_models.Trade.instrument)
-            .filter(trade_models.Instrument.id == search_value)
+            .filter(trade_models.Instrument.name == search_value)
             .all()
         )
-    return result
+        if not result:
+            result = (
+                db.query(trade_models.Trade)
+                .join(trade_models.Trade.instrument)
+                .filter(trade_models.Instrument.id == search_value)
+                .all()
+            )
+        return result
 
 
-def search_filter_by_trader_name(db: Session, search_value: str) -> List[ModelType]:
-    result = (
-        db.query(trade_models.Trade)
-        .join(trade_models.Trade.trader)
-        .filter(trade_models.Trader.name == search_value)
-        .all()
-    )
-    return result
+class SearchForTraderName(SearchFilter):
+
+    def search(self, db: Session, search_value: Any) -> List[ModelType]:
+        result = (
+            db.query(trade_models.Trade)
+            .join(trade_models.Trade.trader)
+            .filter(trade_models.Trader.name == search_value)
+            .all()
+        )
+        return result
 
 
 def filter_by_asset_class(db: Session, values_dict: dict) -> List[ModelType]:

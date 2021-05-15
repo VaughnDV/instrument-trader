@@ -1,8 +1,9 @@
-from abc import ABC, abstractmethod
-from typing import Callable, List
+from abc import ABC
+from typing import Callable, List, Tuple
 
 from sqlalchemy.orm import Session
 
+from app.crud.trade_filters import SearchFilter
 from app.custom_types import ModelType
 
 
@@ -11,28 +12,48 @@ class GetMixin(ABC):
     model: ModelType
 
     def get(self, search_id: int) -> ModelType:
-        return (
-            self.db.query(self.model).filter(self.model.id == search_id).first()
-        )
+        """
+        Query that fetches the first item from the database where the id matches the given search_id.
+        Override this method if your id field is named something else
+        """
+        return self.db.query(self.model).filter(self.model.id == search_id).first()
 
 
 class GetListMixin(ABC):
     db: Session
     model: ModelType
 
-    def get_list(self) -> ModelType:
+    def get_list(self) -> List[ModelType]:
+        """
+        Query that fetches array of all results for the injected model
+        """
         return self.db.query(self.model).all()
 
 
 class SearchFiltersMixin(ABC):
+    db: Session
+    model: ModelType
+    searchable_filters: Tuple[SearchFilter]
 
-    @abstractmethod
     def search(self, search_value: str) -> List[ModelType]:
-        ...
+        """
+        Iterates over the injected `searchable_filters`, compiles and then returns an array of results
+        """
+        results = []
+
+        for searchable_filter_cls in self.searchable_filters:
+            found = searchable_filter_cls().search(self.db, search_value)
+            if found:
+                results += found
+        return results
 
 
 class FiltersMixin(ABC):
     db: Session
+    model: ModelType
 
     def filter(self, filter_fn: Callable, values_dict: dict) -> List[ModelType]:
+        """
+        Calls the provided filter function using key, value pairs in `values_dict` and returns the results
+        """
         return filter_fn(self.db, values_dict)
