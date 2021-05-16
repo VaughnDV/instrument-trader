@@ -19,9 +19,9 @@ class TradeCRUDService(GetMixin, GetListMixin, SearchFiltersMixin, FiltersMixin)
         db: Session = None,
         model: ModelType = trade_models.Trade,
         searchable_filters: Tuple[SearchFilter] = (
-            SearchForInstrument,
-            SearchForTraderName,
-            SearchForCounterParty,
+            SearchForInstrument(),
+            SearchForTraderName(),
+            SearchForCounterParty(),
         ),
     ):
         self.db = db

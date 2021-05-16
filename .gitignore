@@ -134,4 +134,5 @@ sql_app.db
 *.db
 
 # pycharm
+.idea
 .idea/

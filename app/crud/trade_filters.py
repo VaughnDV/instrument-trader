@@ -1,16 +1,16 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from sqlalchemy.orm import Session
 
 from app.models import trade_models
-from typing import List, Any
+from typing import List, Any, Protocol
 from app.custom_types import ModelType
 
 
-class SearchFilter(ABC):
+class SearchFilter(Protocol):
     @abstractmethod
     def search(self, db: Session, search_value: Any) -> List[ModelType]:
-        """Search db in model for value"""
+        """Search db model for value"""
 
 
 class SearchForCounterParty(SearchFilter):
@@ -50,6 +50,11 @@ class SearchForTraderName(SearchFilter):
             .all()
         )
         return result
+
+
+class FilterAction(Protocol):
+    def __call__(self, db: Session, values_dict: dict) -> List[ModelType]:
+        """List values matching keys in values_dict"""
 
 
 def filter_by_asset_class(db: Session, values_dict: dict) -> List[ModelType]:

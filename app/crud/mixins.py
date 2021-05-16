@@ -1,13 +1,13 @@
 from abc import ABC
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Protocol
 
 from sqlalchemy.orm import Session
 
-from app.crud.trade_filters import SearchFilter
+from app.crud.trade_filters import SearchFilter, FilterAction
 from app.custom_types import ModelType
 
 
-class GetMixin(ABC):
+class GetMixin(Protocol):
     db: Session
     model: ModelType
 
@@ -19,7 +19,7 @@ class GetMixin(ABC):
         return self.db.query(self.model).filter(self.model.id == search_id).first()
 
 
-class GetListMixin(ABC):
+class GetListMixin(Protocol):
     db: Session
     model: ModelType
 
@@ -30,7 +30,7 @@ class GetListMixin(ABC):
         return self.db.query(self.model).all()
 
 
-class SearchFiltersMixin(ABC):
+class SearchFiltersMixin(Protocol):
     db: Session
     model: ModelType
     searchable_filters: Tuple[SearchFilter]
@@ -42,17 +42,17 @@ class SearchFiltersMixin(ABC):
         results = []
 
         for searchable_filter_cls in self.searchable_filters:
-            found = searchable_filter_cls().search(self.db, search_value)
+            found: List[ModelType] = searchable_filter_cls.search(self.db, search_value)
             if found:
                 results += found
         return results
 
 
-class FiltersMixin(ABC):
+class FiltersMixin(Protocol):
     db: Session
     model: ModelType
 
-    def filter(self, filter_fn: Callable, values_dict: dict) -> List[ModelType]:
+    def filter(self, filter_fn: FilterAction, values_dict: dict) -> List[ModelType]:
         """
         Calls the provided filter function using key, value pairs in `values_dict` and returns the results
         """

@@ -62,7 +62,9 @@ def trades_list_view(
 
 
 @router.get("/trades/{trade_id}", response_model=trade_schemas.Trade)
-def trade_detail_view(trade_id: int, db: Session = Depends(get_db)) -> trade_schemas.Trade:
+def trade_detail_view(
+    trade_id: int, db: Session = Depends(get_db)
+) -> trade_schemas.Trade:
     """
     A view for retrieving a single trade detail by trade_id
     """
